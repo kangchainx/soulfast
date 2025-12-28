@@ -23,8 +23,27 @@ This initial release (V0.1) is a minimalist Proof of Concept focusing entirely o
 - **State Management**: Zustand (v4 for Web Compatibility)
 - **Design System**: Custom minimalist theme with Phosphor Icons
 
-## Web Compatibility Note
-If running on Web (`npm run web`), ensure you use `npm install --legacy-peer-deps` to handle dependency resolutions correctly. We use `babel-preset-expo` to ensure cross-platform compatibility.
+## Getting Started
+
+### Installation
+
+1. Clone the repository.
+2. Install dependencies:
+   ```bash
+   npm install --legacy-peer-deps
+   ```
+   *Note: Using `--legacy-peer-deps` is necessary to resolve dependency conflicts with React 19.*
+
+### Running the App
+
+- **Mobile (iOS/Android)**: 
+  1. Install **Expo Go** on your physical device.
+  2. Start the server: `npx expo start`.
+  3. Scan the QR code.
+
+- **Web**:
+  1. Run `npm run web` or press `w` in the terminal.
+  2. If you see a `SyntaxError` related to `import.meta`, use: `npx expo start --web --clear`.
 
 
 ## Project Structure
