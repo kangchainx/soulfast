@@ -13,4 +13,8 @@ export const colors = {
     warning: "#FBBF24", // Amber
     error: "#F87171", // Red
   },
+  phases: {
+      fasting: "#0F172A", // Deep Blue (Existing)
+      eating: "#451A03", // Energetic Orange/Brown (New)
+  }
 } as const;
