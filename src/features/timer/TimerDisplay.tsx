@@ -10,10 +10,10 @@ export const TimerDisplay = () => {
   if (status === 'IDLE') {
     return (
       <View style={styles.container}>
-        <Text style={[typography.h2, { color: colors.text.secondary }]}>
+        <Text style={[typography.cuteH2, { color: colors.text.secondary }]}>
           Ready to fast?
         </Text>
-        <Text style={[typography.body, { color: colors.text.muted, marginTop: 8 }]}>
+        <Text style={[typography.cuteBody, { color: colors.text.muted, marginTop: 8 }]}>
           16:8 Protocol
         </Text>
       </View>
@@ -23,7 +23,7 @@ export const TimerDisplay = () => {
   if (status === 'EATING') {
     return (
       <View style={styles.container}>
-        <Text style={[typography.h2, { color: colors.text.primary }]}>
+        <Text style={[typography.cuteH2, { color: colors.text.primary }]}>
           Eating Window
         </Text>
       </View>
@@ -34,11 +34,11 @@ export const TimerDisplay = () => {
     <View style={styles.container}>
       {/* Simple Progress Ring Placeholder */}
       <View style={styles.ringContainer}>
-         <Text style={[typography.h1, { color: colors.primary, fontVariant: ['tabular-nums'] }]}>
+         <Text style={[typography.cuteH1, { color: colors.primary, fontVariant: ['tabular-nums'], fontSize: 48 }]}>
            {formattedRemaining}
          </Text>
       </View>
-      <Text style={[typography.caption, { marginTop: 16 }]}>
+      <Text style={[typography.cuteCaption, { marginTop: 16 }]}>
         {progress.toFixed(1)}% Completed
       </Text>
     </View>

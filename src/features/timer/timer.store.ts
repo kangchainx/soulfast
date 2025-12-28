@@ -11,13 +11,16 @@ interface TimerState {
   durationMinutes: number; // Default 16*60 = 960
   
   startFast: () => void;
-  endFast: () => void;
+  endFast: () => number; // Returns earned XP
   setStatus: (status: FastingStatus) => void;
 }
 
+// Import companion store to trigger XP update
+import { useCompanionStore } from '../companion/companion.store';
+
 export const useTimerStore = create<TimerState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       status: 'IDLE',
       startTime: null,
       endTime: null,
@@ -25,7 +28,7 @@ export const useTimerStore = create<TimerState>()(
 
       startFast: () => {
         const now = new Date();
-        const end = new Date(now.getTime() + 16 * 60 * 60 * 1000);
+        const end = new Date(now.getTime() - (-16 * 60 * 60 * 1000)); // Hack to avoid sign confusion, +16h
         set({ 
           status: 'FASTING', 
           startTime: now.toISOString(), 
@@ -34,7 +37,20 @@ export const useTimerStore = create<TimerState>()(
       },
 
       endFast: () => {
+         const { startTime, status } = get();
+         let xpEarned = 0;
+         if (status === 'FASTING' && startTime) {
+           const start = new Date(startTime);
+           const now = new Date();
+           const durationHours = (now.getTime() - start.getTime()) / (1000 * 60 * 60);
+           
+           if (durationHours > 0.1) {
+             xpEarned = Math.floor(durationHours * 10);
+             useCompanionStore.getState().addXp(xpEarned);
+           }
+         }
          set({ status: 'IDLE', startTime: null, endTime: null });
+         return xpEarned;
       },
 
       setStatus: (status) => set({ status }),

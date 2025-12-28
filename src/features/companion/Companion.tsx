@@ -2,29 +2,42 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useCompanionStore } from './companion.store';
 import { useTimerStore } from '../timer/timer.store';
-import { Smiley, SmileySad, SmileyMeh, Heart, SealCheck } from 'phosphor-react-native';
+import { Star, Fire, PawPrint, Heart, SmileySad } from 'phosphor-react-native';
 import { colors } from '../../shared/theme/colors';
 import { typography } from '../../shared/theme/typography';
 
 export const Companion = () => {
-  const { emotion } = useCompanionStore();
+  const { emotion, beastType } = useCompanionStore();
   const { status } = useTimerStore();
 
   const getIcon = () => {
-    // Mapping emotion to icon
     const size = 120;
-    const weight = 'duotone';
+    const weight = emotion === 'HAPPY' ? 'fill' : 'duotone';
+    
+    // Explicitly type as string because colors is 'as const'
+    let color: string = colors.secondary;
+    if (emotion === 'ENCOURAGED') color = colors.status.success;
+    if (emotion === 'DISAPPOINTED') color = colors.status.error;
+    if (emotion === 'HAPPY') color = colors.status.warning;
 
-    switch (emotion) {
-      case 'ENCOURAGED':
-        return <Smiley size={size} color={colors.status.success} weight={weight} />;
-      case 'DISAPPOINTED':
-        return <SmileySad size={size} color={colors.status.error} weight={weight} />;
-      case 'HAPPY':
-         return <Heart size={size} color={colors.status.warning} weight="fill" />;
-      case 'CALM':
+    // Special case for Disappointed
+    if (emotion === 'DISAPPOINTED') {
+        return <SmileySad size={size} color={color} weight="duotone" />;
+    }
+
+    if (emotion === 'HAPPY') {
+        return <Heart size={size} color={color} weight="fill" />;
+    }
+
+    // Default Beast Icons
+    switch (beastType) {
+      case 'dragon':
+        return <Fire size={size} color={color} weight={weight} />;
+      case 'fox':
+        return <PawPrint size={size} color={color} weight={weight} />;
+      case 'cat':
       default:
-        return <SmileyMeh size={size} color={colors.secondary} weight={weight} />;
+        return <Star size={size} color={color} weight={weight} />;
     }
   };
 
@@ -46,7 +59,7 @@ export const Companion = () => {
       <View style={styles.iconContainer}>
         {getIcon()}
       </View>
-      <Text style={[typography.h2, styles.message]}>
+      <Text style={[typography.cuteH2, styles.message]}>
         {getMessage()}
       </Text>
     </View>
