@@ -22,6 +22,7 @@ interface TimerState {
   completedSessions: number; // 完成次数（总数）
   currentStreak: number; // 连续天数
   sessionTimestamps: number[]; // 每次完成的时间戳（用于周统计）
+  lastCompletionDate: string | null; // 最后完成日期 (YYYY-MM-DD)
   
   // 操作
   startFasting: () => void;
@@ -48,6 +49,7 @@ export const useTimerStore = create<TimerState>()(
       completedSessions: 0,
       currentStreak: 0,
       sessionTimestamps: [],
+      lastCompletionDate: null,
 
       startFasting: () => {
         set({
@@ -64,6 +66,38 @@ export const useTimerStore = create<TimerState>()(
           const completed = elapsed >= state.targetDuration;
           const now = Date.now();
           
+          // 计算日期（YYYY-MM-DD 格式）
+          const today = new Date(now).toISOString().split('T')[0];
+          
+          let newStreak = state.currentStreak;
+          
+          if (completed) {
+            if (!state.lastCompletionDate) {
+              // 第一次完成
+              newStreak = 1;
+            } else if (state.lastCompletionDate === today) {
+              // 同一天内多次完成，保持 streak 不变
+              newStreak = state.currentStreak;
+            } else {
+              // 检查是否是连续的第二天
+              const lastDate = new Date(state.lastCompletionDate);
+              const todayDate = new Date(today);
+              const diffTime = todayDate.getTime() - lastDate.getTime();
+              const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+              
+              if (diffDays === 1) {
+                // 连续的第二天，递增
+                newStreak = state.currentStreak + 1;
+              } else if (diffDays > 1) {
+                // 跳过了天数，重置为 1
+                newStreak = 1;
+              }
+            }
+          } else {
+            // 未完成，重置 streak
+            newStreak = 0;
+          }
+          
           set({
             isRunning: false,
             startTime: null,
@@ -71,12 +105,11 @@ export const useTimerStore = create<TimerState>()(
             completedSessions: completed 
               ? state.completedSessions + 1 
               : state.completedSessions,
-            currentStreak: completed 
-              ? state.currentStreak + 1 
-              : 0,
+            currentStreak: newStreak,
             sessionTimestamps: completed
               ? [...state.sessionTimestamps, now]
               : state.sessionTimestamps,
+            lastCompletionDate: completed ? today : state.lastCompletionDate,
           });
         }
       },
@@ -145,6 +178,7 @@ export const useTimerStore = create<TimerState>()(
         completedSessions: state.completedSessions,
         currentStreak: state.currentStreak,
         sessionTimestamps: state.sessionTimestamps,
+        lastCompletionDate: state.lastCompletionDate,
         // 持久化运行状态，支持应用重启后恢复
         isRunning: state.isRunning,
         startTime: state.startTime,
