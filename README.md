@@ -1,68 +1,84 @@
 # SoulFast
 
-> **"It's not about the timer. It's about who you let down."**
+> 16:8 科学断食管理 App · 极简 · 禅意 · 科学
 
-SoulFast is an open-source, mobile-first fasting companion that validates an emotional behavior-constraint mechanism. Unlike traditional fasting trackers that rely on gamification, charts, or notifications, SoulFast creates a psychological commitment through a virtual companion.
+## 🎯 核心理念
 
-The core philosophy is grounded in **loss aversion**: disrupting the fast feels like disappointing a friend, not just stopping a clock.
+- **科学**: 基于循证医学的 16:8 间歇性断食方案
+- **极简**: 充足留白、大圆角、高斯模糊的禅意设计
+- **去抽象化**: 使用科学术语，拒绝玄学词汇
 
-## V0.1: Emotional Validation
+## 🔧 技术栈
 
-This initial release (V0.1) is a minimalist Proof of Concept focusing entirely on the emotional feedback loop.
+| 分类 | 技术 |
+|------|------|
+| 基础 | Expo SDK 54, React 19.1 |
+| 路由 | Expo Router v4 |
+| 样式 | NativeWind v5 (Tailwind CSS) |
+| 状态 | Zustand |
+| 动画 | React Native Reanimated |
+| 图标 | Lucide React Native |
+| 字体 | Noto Sans SC |
 
-### Features
-- **Distraction-Free Timer**: A clean 16:8 fasting timer that fades into the background.
-- **Virtual Companion**: An omnipresent entity whose emotional state reflects your discipline.
-- **Emotional Interruption**: Ending a fast early triggers a "guilt mechanism"—a deliberate friction point where the companion expresses disappointment, requiring you to actively confirm the breach of trust.
-- **Local-Only**: No accounts, no cloud, no data tracking. Your journey is personal.
+## 🎨 设计规范
 
-## Technology Stack
+| Token | 值 |
+|-------|-----|
+| 背景色 | `#FFF9F2` |
+| 强调色 | `#FF8C69` |
+| 文字色 | `#4A4238` |
+| 辅助色 | `#D4A373` |
 
-- **Framework**: Expo (Managed Workflow)
-- **Core**: React Native + TypeScript
-- **State Management**: Zustand (v4 for Web Compatibility)
-- **Design System**: Custom minimalist theme with Phosphor Icons
+## 📁 项目结构
 
-## Getting Started
+```
+soulfast/
+├── app/                    # Expo Router 页面
+│   ├── _layout.tsx         # 全局布局
+│   └── (tabs)/             # Tab 导航页面
+│       ├── _layout.tsx     # Tab 布局
+│       ├── index.tsx       # 断食计时器
+│       ├── community.tsx   # 社区动态
+│       └── profile.tsx     # 个人数据
+├── components/             # 可复用组件
+│   └── ConfirmModal.tsx    # 确认模态框
+├── store/                  # Zustand 状态
+│   └── useTimerStore.ts    # 计时器状态
+└── assets/                 # 静态资源
+    └── fonts/              # 字体文件
+```
 
-### Installation
+## 🚀 快速开始
 
-1. Clone the repository.
-2. Install dependencies:
-   ```bash
-   npm install --legacy-peer-deps
-   ```
-   *Note: Using `--legacy-peer-deps` is necessary to resolve dependency conflicts with React 19.*
+```bash
+# 安装依赖
+npm install
 
-### Running the App
+# 启动开发服务器
+npx expo start
 
-- **Mobile (iOS/Android)**: 
-  1. Install **Expo Go** on your physical device.
-  2. Start the server: `npx expo start`.
-  3. Scan the QR code.
+# 在 iOS 模拟器运行
+npx expo start --ios
 
-- **Web**:
-  1. Run `npm run web` or press `w` in the terminal.
-  2. If you see a `SyntaxError` related to `import.meta`, use: `npx expo start --web --clear`.
+# 在 Android 模拟器运行
+npx expo start --android
+```
 
+## 📱 功能模块
 
-## Project Structure
+### M02/M04 断食计时器
+- 非计时态：展示 16:8 介绍，长按手势启动断食
+- 计时态：大字号倒计时，阶段提示，脉冲动画
 
-- `src/app`: Navigation and Screen assembly.
-- `src/features`: Independent functional modules.
-  - `companion`: Companion emotional states and UI.
-  - `timer`: Fasting logic and countdown.
-  - `emotion`: Helper logic for emotional states.
-- `src/shared`: Reusable theme tokens and UI atoms.
+### M03 社区动态
+- 极简用户列表，展示断食记录
 
-## Future Evolution
+### M06 健康数据
+- 累计时长、目标达成率、连续天数统计
 
-SoulFast evolves from a tool into a presence.
+### M05 确认模态框
+- 优雅的居中弹窗，科学引导文案
 
-1.  **Phase 1 (Single Player)**: Deepening the bond. The companion "grows" and remembers past failures/successes, building a history that feels alive.
-2.  **Phase 2 (Community)**: "Pacts". Linking your companion with others. If you break your fast, your friend's companion reacts.
-3.  **Phase 3 (Ecosystem)**: Hardware integration (e.g., status on a physical desk ornament) and Web3 validation (proof-of-fast).
+## 📄 License
 
-## Contributing
-
-We welcome thoughtful contributors who align with the philosophy of "calm technology" and "emotional design". Please read the code of conduct before submitting PRs.
+MIT
