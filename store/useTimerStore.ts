@@ -19,8 +19,9 @@ interface TimerState {
   
   // 统计数据
   totalFastingTime: number; // 累计断食时长（毫秒）
-  completedSessions: number; // 完成次数
+  completedSessions: number; // 完成次数（总数）
   currentStreak: number; // 连续天数
+  sessionTimestamps: number[]; // 每次完成的时间戳（用于周统计）
   
   // 操作
   startFasting: () => void;
@@ -32,6 +33,7 @@ interface TimerState {
   getRemainingTime: () => number;
   getProgress: () => number;
   getCurrentPhase: () => typeof FASTING_PHASES[number];
+  getWeeklyCompletedSessions: () => number; // 本周完成次数
 }
 
 const SIXTEEN_HOURS_MS = 16 * 60 * 60 * 1000;
@@ -45,6 +47,7 @@ export const useTimerStore = create<TimerState>()(
       totalFastingTime: 0,
       completedSessions: 0,
       currentStreak: 0,
+      sessionTimestamps: [],
 
       startFasting: () => {
         set({
@@ -59,6 +62,7 @@ export const useTimerStore = create<TimerState>()(
           const elapsed = Date.now() - state.startTime;
           const newTotal = state.totalFastingTime + elapsed;
           const completed = elapsed >= state.targetDuration;
+          const now = Date.now();
           
           set({
             isRunning: false,
@@ -70,6 +74,9 @@ export const useTimerStore = create<TimerState>()(
             currentStreak: completed 
               ? state.currentStreak + 1 
               : 0,
+            sessionTimestamps: completed
+              ? [...state.sessionTimestamps, now]
+              : state.sessionTimestamps,
           });
         }
       },
@@ -118,6 +125,17 @@ export const useTimerStore = create<TimerState>()(
         }
         return currentPhase;
       },
+
+      getWeeklyCompletedSessions: () => {
+        const state = get();
+        const now = Date.now();
+        const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
+        
+        // 过滤出本周的会话（过去 7 天）
+        return state.sessionTimestamps.filter(
+          (timestamp) => timestamp >= oneWeekAgo
+        ).length;
+      },
     }),
     {
       name: "soulfast-timer-storage",
@@ -126,6 +144,7 @@ export const useTimerStore = create<TimerState>()(
         totalFastingTime: state.totalFastingTime,
         completedSessions: state.completedSessions,
         currentStreak: state.currentStreak,
+        sessionTimestamps: state.sessionTimestamps,
         // 持久化运行状态，支持应用重启后恢复
         isRunning: state.isRunning,
         startTime: state.startTime,

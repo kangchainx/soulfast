@@ -15,10 +15,11 @@ function formatTotalTime(ms: number): string {
 }
 
 export default function ProfileScreen() {
-  const { totalFastingTime, completedSessions, currentStreak } = useTimerStore();
+  const { totalFastingTime, currentStreak, getWeeklyCompletedSessions } = useTimerStore();
 
   const weeklyGoal = 7;
-  const achievementRate = Math.min(100, Math.round((completedSessions / weeklyGoal) * 100));
+  const weeklyCompleted = getWeeklyCompletedSessions();
+  const achievementRate = Math.min(100, Math.round((weeklyCompleted / weeklyGoal) * 100));
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,7 +62,7 @@ export default function ProfileScreen() {
             <View style={[styles.progressFill, { width: `${achievementRate}%` }]} />
           </View>
           <Text style={styles.progressHint}>
-            本周完成 {completedSessions} 次，目标 {weeklyGoal} 次
+            本周完成 {weeklyCompleted} 次，目标 {weeklyGoal} 次
           </Text>
         </View>
 
