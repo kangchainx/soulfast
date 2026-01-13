@@ -54,8 +54,11 @@ export default function HomeScreen() {
 
   // 脉冲动画
   useEffect(() => {
+    let scaleAnim: Animated.CompositeAnimation | null = null;
+    let opacityAnim: Animated.CompositeAnimation | null = null;
+
     if (isRunning) {
-      Animated.loop(
+      scaleAnim = Animated.loop(
         Animated.sequence([
           Animated.timing(pulseScale, {
             toValue: 1.05,
@@ -70,8 +73,8 @@ export default function HomeScreen() {
             useNativeDriver: true,
           }),
         ])
-      ).start();
-      Animated.loop(
+      );
+      opacityAnim = Animated.loop(
         Animated.sequence([
           Animated.timing(pulseOpacity, {
             toValue: 0.5,
@@ -86,11 +89,18 @@ export default function HomeScreen() {
             useNativeDriver: true,
           }),
         ])
-      ).start();
+      );
+      scaleAnim.start();
+      opacityAnim.start();
     } else {
       pulseScale.setValue(1);
       pulseOpacity.setValue(0.3);
     }
+
+    return () => {
+      scaleAnim?.stop();
+      opacityAnim?.stop();
+    };
   }, [isRunning]);
 
   // 长按处理
@@ -118,6 +128,13 @@ export default function HomeScreen() {
       useNativeDriver: false,
     }).start();
   };
+
+  // 组件卸载时清理长按动画
+  useEffect(() => {
+    return () => {
+      longPressProgress.stopAnimation();
+    };
+  }, []);
 
   const currentPhase = isRunning ? getCurrentPhase() : FASTING_PHASES[0];
   const progress = isRunning ? getProgress() : 0;
