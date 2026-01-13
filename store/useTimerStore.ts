@@ -38,6 +38,7 @@ interface TimerState {
 }
 
 const SIXTEEN_HOURS_MS = 16 * 60 * 60 * 1000;
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000; // 30天，用于清理旧数据
 
 export const useTimerStore = create<TimerState>()(
   persist(
@@ -102,12 +103,14 @@ export const useTimerStore = create<TimerState>()(
             isRunning: false,
             startTime: null,
             totalFastingTime: newTotal,
-            completedSessions: completed 
-              ? state.completedSessions + 1 
+            completedSessions: completed
+              ? state.completedSessions + 1
               : state.completedSessions,
             currentStreak: newStreak,
             sessionTimestamps: completed
-              ? [...state.sessionTimestamps, now]
+              ? [...state.sessionTimestamps, now].filter(
+                  (timestamp) => now - timestamp < THIRTY_DAYS_MS
+                )
               : state.sessionTimestamps,
             lastCompletionDate: completed ? today : state.lastCompletionDate,
           });
