@@ -13,6 +13,7 @@ export const FASTING_PHASES = [
 
 interface TimerState {
   // 状态
+  hasSeenWelcome: boolean; // 是否已看过新手引导
   isRunning: boolean;
   startTime: number | null;
   targetDuration: number; // 目标时长（毫秒），默认 16 小时
@@ -28,6 +29,7 @@ interface TimerState {
   startFasting: () => void;
   stopFasting: () => void;
   resetTimer: () => void;
+  completeWelcome: () => void;
   
   // 计算属性辅助
   getElapsedTime: () => number;
@@ -43,6 +45,7 @@ const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000; // 30天，用于清理旧数�
 export const useTimerStore = create<TimerState>()(
   persist(
     (set, get) => ({
+      hasSeenWelcome: false,
       isRunning: false,
       startTime: null,
       targetDuration: SIXTEEN_HOURS_MS,
@@ -124,6 +127,10 @@ export const useTimerStore = create<TimerState>()(
         });
       },
 
+      completeWelcome: () => {
+        set({ hasSeenWelcome: true });
+      },
+
       getElapsedTime: () => {
         const state = get();
         if (!state.startTime) return 0;
@@ -177,6 +184,7 @@ export const useTimerStore = create<TimerState>()(
       name: "soulfast-timer-storage",
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({
+        hasSeenWelcome: state.hasSeenWelcome,
         totalFastingTime: state.totalFastingTime,
         completedSessions: state.completedSessions,
         currentStreak: state.currentStreak,
