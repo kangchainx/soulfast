@@ -1,3 +1,4 @@
+import "../global.css";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
@@ -25,6 +26,7 @@ export default function RootLayout() {
     "NotoSansSC-Regular": require("../assets/fonts/NotoSansSC-Regular.otf"),
     "NotoSansSC-Medium": require("../assets/fonts/NotoSansSC-Medium.otf"),
     "NotoSansSC-Bold": require("../assets/fonts/NotoSansSC-Bold.otf"),
+    "Cinzel-Regular": require("@expo-google-fonts/cinzel/Cinzel_400Regular.ttf"),
   });
 
   useEffect(() => {
@@ -49,6 +51,8 @@ export default function RootLayout() {
             animation: "fade",
           }}
         >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="welcome" />
           <Stack.Screen name="(tabs)" />
         </Stack>
       </SafeAreaProvider>
