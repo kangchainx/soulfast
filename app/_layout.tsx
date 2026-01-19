@@ -2,9 +2,15 @@ import "../global.css";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+import { Cinzel_400Regular } from "@expo-google-fonts/cinzel";
+import {
+  NotoSans_400Regular,
+  NotoSans_500Medium,
+  NotoSans_700Bold,
+} from "@expo-google-fonts/noto-sans";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Platform } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -21,13 +27,22 @@ export const colors = {
 };
 
 export default function RootLayout() {
-  // 加载 Noto Sans 字体系列
-  const [fontsLoaded, fontError] = useFonts({
-    "NotoSansSC-Regular": require("../assets/fonts/NotoSansSC-Regular.otf"),
-    "NotoSansSC-Medium": require("../assets/fonts/NotoSansSC-Medium.otf"),
-    "NotoSansSC-Bold": require("../assets/fonts/NotoSansSC-Bold.otf"),
-    "Cinzel-Regular": require("@expo-google-fonts/cinzel/Cinzel_400Regular.ttf"),
-  });
+  // 在 Web 平台使用 Google Fonts，在原生平台使用本地 .otf 文件
+  const fontConfig = Platform.OS === 'web'
+    ? {
+        "NotoSansSC-Regular": NotoSans_400Regular,
+        "NotoSansSC-Medium": NotoSans_500Medium,
+        "NotoSansSC-Bold": NotoSans_700Bold,
+        "Cinzel-Regular": Cinzel_400Regular,
+      }
+    : {
+        "NotoSansSC-Regular": require("../assets/fonts/NotoSansSC-Regular.otf"),
+        "NotoSansSC-Medium": require("../assets/fonts/NotoSansSC-Medium.otf"),
+        "NotoSansSC-Bold": require("../assets/fonts/NotoSansSC-Bold.otf"),
+        "Cinzel-Regular": Cinzel_400Regular,
+      };
+
+  const [fontsLoaded, fontError] = useFonts(fontConfig);
 
   useEffect(() => {
     if (fontsLoaded || fontError) {

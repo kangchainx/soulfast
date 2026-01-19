@@ -14,11 +14,11 @@ module.exports = {
         },
       },
       fontFamily: {
-        // 配置字体映射
-        sans: ["NotoSansSC-Regular"],
-        "sans-medium": ["NotoSansSC-Medium"],
-        "sans-bold": ["NotoSansSC-Bold"],
-        cinzel: ["Cinzel-Regular"],
+        // 配置字体映射，添加 Web 平台的后备字体
+        sans: ["NotoSansSC-Regular", "system-ui", "-apple-system", "sans-serif"],
+        "sans-medium": ["NotoSansSC-Medium", "system-ui", "-apple-system", "sans-serif"],
+        "sans-bold": ["NotoSansSC-Bold", "system-ui", "-apple-system", "sans-serif"],
+        cinzel: ["Cinzel-Regular", "serif"],
       },
     },
   },
