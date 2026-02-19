@@ -42,22 +42,6 @@ soulfast/
     └── fonts/              # 字体文件
 ```
 
-## 🚀 快速开始
-
-```bash
-# 安装依赖
-npm install
-
-# 启动开发服务器
-npx expo start
-
-# 在 iOS 模拟器运行
-npx expo start --ios
-
-# 在 Android 模拟器运行
-npx expo start --android
-```
-
 ## 📄 License
 
 MIT
